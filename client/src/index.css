@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+
+@import "tailwindcss";
+
+:root{
+    --max-width: 1280px;
+    --content-padding: 1rem;
+    --bg: #071226;
+    --muted: #9ca3af;
+    --card-bg-start: rgba(158, 150, 150, 0.314);
+    --card-bg-end: rgba(255, 255, 255, 0.225);
+    --card-border: rgba(251, 244, 244, 0.442);
+    --card-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    --accent: #8b8be8;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+    margin:0;
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    color:#fff;
+    font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    font-size:16px;
+}
+
+.font-playfair{
+        font-family: Playfair, serif !important;
+}
+
+.container{
+    max-width:var(--max-width);
+    margin-left:auto;
+    margin-right:auto;
+    padding-left:var(--content-padding);
+    padding-right:var(--content-padding);
+}
+
+@media (min-width:768px){
+    :root{--content-padding:2rem}
+}
+
+/* Utility for responsive images and media */
+img,video{max-width:100%;height:auto;display:block}
+
+/* Small subtle headings */
+h1,h2,h3{color:#fff;margin:0}
+
+/* Marquee / infinite scroll for cards */
+.marquee{overflow:hidden}
+.marquee-track{display:flex;align-items:center;gap:1rem;width:max-content;animation:marquee 20s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Card tweaks to match the sample design */
+.card-ghost{background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:12px;padding:12px}
+.card-ghost p{color:rgba(255,255,255,0.95)}
+
+/* Row marquee animation (alternating directions) */
+.row{--gap:1rem}
+.row{--fade:80px}
+.row{position:relative}
+
+/* Use CSS masking so the moving cards themselves fade at the edges. */
+.row{ -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0px, rgba(0,0,0,1) var(--fade), rgba(0,0,0,1) calc(100% - var(--fade)), rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,0) 0px, rgba(0,0,0,1) var(--fade), rgba(0,0,0,1) calc(100% - var(--fade)), rgba(0,0,0,0) 100%); }
+
+/* Fallback overlay for browsers that don't support mask-image */
+.row::before,.row::after{content:'';position:absolute;top:0;bottom:0;width:2rem;pointer-events:none;z-index:12}
+.row::before{left:0;}
+.row::after{right:0;}
+.row-track{display:flex;align-items:center;gap:var(--gap);width:max-content;animation:slide 18s linear infinite}
+.row-track:hover{animation-play-state:paused}
+.row-track[data-paused="true"]{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Compact card style */
+.card-compact{
+    position:relative;
+    display:flex;
+    align-items:center;
+    background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end));
+    background-size: 200% 200%;
+    backdrop-filter: blur(10px);
+    border-radius:12px;
+    padding:10px 14px;
+    border:1px solid var(--card-border);
+    transition: transform .22s ease, box-shadow .22s ease, background-position .6s ease;
+}
+.card-compact:hover{
+    transform: translateY(-6px);
+    background-position: 100% 0;
+}
+.card-compact[data-live="true"]::after{
+    content:'';
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--accent);
+    animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{
+    0%{transform:scale(1);opacity:1}
+    50%{transform:scale(1.25);opacity:.6}
+    100%{transform:scale(1);opacity:1}
+}
+
+@media (max-width:640px){
+    .row-track > div{min-width:180px !important}
+}
