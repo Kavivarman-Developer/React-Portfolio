@@ -66,6 +66,10 @@ const DEFAULT_FOLDERS = [
 const FOLDER_COLORS = ["#00e5ff", "#a78bfa", "#f472b6", "#34d399", "#fbbf24", "#60a5fa", "#fb923c"];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
+const isMediaFile = (file) => file.type.startsWith("image/") || file.type.startsWith("video/");
+const isVideoMedia = (media) =>
+  media?.mediaType === "video" || media?.mimeType?.startsWith("video/") || /\.(mp4|mov|webm|ogg)$/i.test(media?.src || "");
+
 const DigitalMarketing = () => {
   const [folders, setFolders] = useState([]);
   const [photosByFolder, setPhotosByFolder] = useState({});
@@ -81,6 +85,7 @@ const DigitalMarketing = () => {
   const [drawerOpen, setDrawerOpen] = useState(false); // mobile drawer
   const [isMobile, setIsMobile] = useState(false);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
+  const [showAllMedia, setShowAllMedia] = useState(false);
   const fileInputRef = useRef(null);
 
   // Detect mobile
@@ -121,35 +126,39 @@ const DigitalMarketing = () => {
 
   const currentPhotos = photosByFolder[activeFolder] || [];
   const currentFolder = folders.find((f) => f.id === activeFolder);
+  const allMedia = folders.flatMap((folder) =>
+    (photosByFolder[folder.id] || []).map((photo) => ({
+      ...photo,
+      folderName: folder.name,
+      folderIcon: folder.icon,
+      folderColor: folder.color || "#00e5ff",
+    }))
+  );
 
-  // ── Cloudinary upload ────────────────────────────────────────────────────
-  const CLOUD_NAME = "dns4pdqve";
-  const UPLOAD_PRESET = "Portfolio_Upload";
-
-  const uploadToCloudinary = async (file) => {
+  // ── Local upload ─────────────────────────────────────────────────────────
+  const uploadToLocalFolder = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: formData }
-    );
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
     const data = await res.json();
-    if (!data.secure_url) throw new Error("Cloudinary upload failed");
-    return data.secure_url;
+    if (!res.ok || !data.files?.[0]?.url) throw new Error(data.error || "Local upload failed");
+    return data.files[0];
   };
 
   const readFiles = (files) =>
     Promise.all(
       Array.from(files)
-        .filter((f) => f.type.startsWith("image/"))
+        .filter(isMediaFile)
         .map(async (file) => {
-          const url = await uploadToCloudinary(file);
+          const uploaded = await uploadToLocalFolder(file);
           return {
             id: `photo-${Date.now()}-${Math.random().toString(36).slice(2)}`,
             folderId: activeFolder,
             name: file.name,
-            src: url,
+            src: uploaded.url,
+            storedName: uploaded.fileName,
+            mimeType: uploaded.mimeType || file.type,
+            mediaType: file.type.startsWith("video/") ? "video" : "image",
             size: (file.size / 1024).toFixed(1) + " KB",
             type: file.type.split("/")[1].toUpperCase(),
             addedAt: new Date().toLocaleDateString(),
@@ -175,7 +184,7 @@ const DigitalMarketing = () => {
       await addPhotos(photos);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed. Check your Cloudinary settings.");
+      alert("Upload failed. Make sure the Vite dev server is running.");
     } finally {
       setUploading(false);
     }
@@ -188,18 +197,18 @@ const DigitalMarketing = () => {
       await addPhotos(photos);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed. Check your Cloudinary settings.");
+      alert("Upload failed. Make sure the Vite dev server is running.");
     } finally {
       setUploading(false);
     }
     e.target.value = "";
   };
 
-  const handleDeletePhoto = async (photoId) => {
+  const handleDeletePhoto = async (photoId, folderId = activeFolder) => {
     await dbDelete(PHOTOS_STORE, photoId);
     setPhotosByFolder((prev) => ({
       ...prev,
-      [activeFolder]: (prev[activeFolder] || []).filter((p) => p.id !== photoId),
+      [folderId]: (prev[folderId] || []).filter((p) => p.id !== photoId),
     }));
     setSelectedPhotos((prev) => prev.filter((id) => id !== photoId));
     if (hoveredPhoto?.id === photoId) setHoveredPhoto(null);
@@ -498,21 +507,19 @@ const DigitalMarketing = () => {
         {lightboxPhoto && (
           <div className="lightbox-backdrop" onClick={() => setLightboxPhoto(null)}>
             <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: 700, width: "100%", borderRadius: 16, overflow: "hidden", background: "#0d1220", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <img src={lightboxPhoto.src} alt={lightboxPhoto.name}
-                style={{ width: "100%", maxHeight: "70vh", objectFit: "contain", display: "block", background: "#080b14" }} />
+              {isVideoMedia(lightboxPhoto) ? (
+                <video src={lightboxPhoto.src} controls autoPlay
+                  style={{ width: "100%", maxHeight: "70vh", objectFit: "contain", display: "block", background: "#080b14" }} />
+              ) : (
+                <img src={lightboxPhoto.src} alt={lightboxPhoto.name}
+                  style={{ width: "100%", maxHeight: "70vh", objectFit: "contain", display: "block", background: "#080b14" }} />
+              )}
               <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0" }}>{lightboxPhoto.name}</div>
                   <div style={{ fontSize: 11, color: "#475569" }}>{lightboxPhoto.size} · {lightboxPhoto.addedAt}</div>
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
-                  <button
-                    onClick={() => { handleDeletePhoto(lightboxPhoto.id); }}
-                    style={{
-                      padding: "6px 14px", borderRadius: 8, fontSize: 11, fontWeight: 600,
-                      background: "rgba(244,63,94,0.15)", border: "1px solid rgba(244,63,94,0.35)",
-                      color: "#fb7185", cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif",
-                    }}>🗑 Delete</button>
                   <button onClick={() => setLightboxPhoto(null)} style={{
                     padding: "6px 14px", borderRadius: 8, fontSize: 11, fontWeight: 600,
                     background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
@@ -525,8 +532,100 @@ const DigitalMarketing = () => {
         )}
 
         {/* ── Page Header ── */}
+        {showAllMedia && (
+          <div className="lightbox-backdrop" style={{ zIndex: 250, alignItems: "flex-start", overflowY: "auto" }} onClick={() => setShowAllMedia(false)}>
+            <div onClick={(e) => e.stopPropagation()} style={{
+              width: "min(960px, 100%)",
+              marginTop: 18,
+              marginBottom: 18,
+              borderRadius: 16,
+              overflow: "hidden",
+              background: "#0d1220",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}>
+              <div style={{
+                padding: "14px 16px",
+                borderBottom: "1px solid rgba(255,255,255,0.07)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+              }}>
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: "#e2e8f0" }}>All Media</h3>
+                  <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>{allMedia.length} file{allMedia.length !== 1 ? "s" : ""} across {folders.length} folders</div>
+                </div>
+                <button onClick={() => setShowAllMedia(false)} style={{
+                  width: 30, height: 30, borderRadius: 8,
+                  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#64748b", cursor: "pointer", fontSize: 16,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>âœ•</button>
+              </div>
+
+              <div style={{ padding: 14 }}>
+                {allMedia.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "36px 0", color: "#334155", fontSize: 13 }}>
+                    No media uploaded yet.
+                  </div>
+                ) : (
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+                    gap: 10,
+                  }}>
+                    {allMedia.map((photo) => (
+                      <div
+                        key={photo.id}
+                        className="photo-card"
+                        onClick={() => setLightboxPhoto(photo)}
+                        style={{
+                          border: `2px solid ${photo.folderColor}33`,
+                          background: "#080b14",
+                        }}
+                      >
+                        {isVideoMedia(photo) ? (
+                          <video src={photo.src} muted playsInline
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        ) : (
+                          <img src={photo.src} alt={photo.name}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        )}
+                        <div style={{
+                          position: "absolute", top: 6, left: 6,
+                          maxWidth: "calc(100% - 12px)",
+                          padding: "3px 7px",
+                          borderRadius: 20,
+                          background: "rgba(0,0,0,0.65)",
+                          border: `1px solid ${photo.folderColor}55`,
+                          color: photo.folderColor,
+                          fontSize: 9,
+                          fontWeight: 700,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>{photo.folderIcon} {photo.folderName}</div>
+                        <div style={{
+                          position: "absolute", bottom: 0, left: 0, right: 0,
+                          background: "linear-gradient(transparent, rgba(0,0,0,0.85))",
+                          padding: "18px 7px 6px",
+                          color: "rgba(255,255,255,0.8)",
+                          fontSize: 10,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>{photo.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "18px 16px 0" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 4 }}>
             {/* Mobile hamburger — hidden, folders shown as chips below */}
             <div>
               <h1 style={{
@@ -540,6 +639,18 @@ const DigitalMarketing = () => {
                 {folders.length} folders · {Object.values(photosByFolder).flat().length} total files
               </p>
             </div>
+            <button onClick={() => setShowAllMedia(true)} style={{
+              padding: "8px 14px",
+              borderRadius: 8,
+              fontSize: 12,
+              fontWeight: 700,
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "#e2e8f0",
+              cursor: "pointer",
+              fontFamily: "'Space Grotesk', sans-serif",
+              whiteSpace: "nowrap",
+            }}>View All</button>
           </div>
 
           {/* Mobile folder chips */}
@@ -625,7 +736,7 @@ const DigitalMarketing = () => {
                   border: "none", color: "white", cursor: uploading ? "not-allowed" : "pointer",
                   fontFamily: "'Space Grotesk', sans-serif", opacity: uploading ? 0.7 : 1,
                 }}>{uploading ? "⏳ Uploading..." : "+ Upload"}</button>
-                <input ref={fileInputRef} type="file" multiple accept="image/*"
+                <input ref={fileInputRef} type="file" multiple accept="image/*,video/*"
                   style={{ display: "none" }} onChange={handleFileInput} />
               </div>
               )}
@@ -690,8 +801,13 @@ const DigitalMarketing = () => {
                             boxShadow: isSelected ? `0 0 12px ${currentFolder?.color || "#00e5ff"}33` : "none",
                           }}
                         >
-                          <img src={photo.src} alt={photo.name}
-                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                          {isVideoMedia(photo) ? (
+                            <video src={photo.src} muted playsInline
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                          ) : (
+                            <img src={photo.src} alt={photo.name}
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                          )}
 
                           {/* Hover overlay — desktop only */}
                           <div className="photo-overlay">
@@ -760,8 +876,13 @@ const DigitalMarketing = () => {
             boxShadow: "0 20px 50px rgba(0,0,0,0.7)",
             pointerEvents: "none", width: 200,
           }}>
-            <img src={hoveredPhoto.src} alt={hoveredPhoto.name}
-              style={{ width: "100%", height: 130, objectFit: "cover", display: "block" }} />
+            {isVideoMedia(hoveredPhoto) ? (
+              <video src={hoveredPhoto.src} muted playsInline
+                style={{ width: "100%", height: 130, objectFit: "cover", display: "block" }} />
+            ) : (
+              <img src={hoveredPhoto.src} alt={hoveredPhoto.name}
+                style={{ width: "100%", height: 130, objectFit: "cover", display: "block" }} />
+            )}
             <div style={{ padding: "10px 12px" }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: "#e2e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 5 }}>
                 {hoveredPhoto.name}

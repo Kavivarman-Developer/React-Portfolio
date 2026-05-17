@@ -68,6 +68,10 @@ const STATUS_CONFIG = {
 };
 
 // ─── Main Component ───────────────────────────────────────────────────────────
+const isMediaFile = (file) => file.type.startsWith("image/") || file.type.startsWith("video/");
+const isVideoMedia = (media) =>
+  media?.mediaType === "video" || media?.mimeType?.startsWith("video/") || /\.(mp4|mov|webm|ogg)$/i.test(media?.src || "");
+
 export default function ProjectView() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
@@ -111,34 +115,30 @@ export default function ProjectView() {
     );
   });
 
-  // ── Cloudinary upload ────────────────────────────────────────────────────
-  const CLOUD_NAME = "dns4pdqve";
-  const UPLOAD_PRESET = "Portfolio_Upload";
-
-  const uploadToCloudinary = async (file) => {
+  // ── Local upload ─────────────────────────────────────────────────────────
+  const uploadToLocalFolder = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: formData }
-    );
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
     const data = await res.json();
-    if (!data.secure_url) throw new Error("Cloudinary upload failed");
-    return data.secure_url;
+    if (!res.ok || !data.files?.[0]?.url) throw new Error(data.error || "Local upload failed");
+    return data.files[0];
   };
 
   const readFiles = (files, projectId) =>
     Promise.all(
       Array.from(files)
-        .filter((f) => f.type.startsWith("image/"))
+        .filter(isMediaFile)
         .map(async (file) => {
-          const url = await uploadToCloudinary(file);
+          const uploaded = await uploadToLocalFolder(file);
           return {
             id: `pp-${projectId}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
             projectId,
             name: file.name,
-            src: url,
+            src: uploaded.url,
+            storedName: uploaded.fileName,
+            mimeType: uploaded.mimeType || file.type,
+            mediaType: file.type.startsWith("video/") ? "video" : "image",
             size: (file.size / 1024).toFixed(1) + " KB",
             addedAt: new Date().toLocaleDateString(),
           };
@@ -146,7 +146,7 @@ export default function ProjectView() {
     );
 
   const handleUpload = async (e, projectId) => {
-    const files = Array.from(e.target.files).filter((f) => f.type.startsWith("image/"));
+    const files = Array.from(e.target.files).filter(isMediaFile);
     if (!files.length) return;
     setUploading(true);
     try {
@@ -158,7 +158,7 @@ export default function ProjectView() {
       }));
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed. Check your Cloudinary settings.");
+      alert("Upload failed. Make sure the Vite dev server is running.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -178,7 +178,7 @@ export default function ProjectView() {
       }));
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed. Check your Cloudinary settings.");
+      alert("Upload failed. Make sure the Vite dev server is running.");
     } finally {
       setUploading(false);
     }
@@ -474,11 +474,19 @@ export default function ProjectView() {
                     {photos.length > 0 ? (
                       <div style={{ height: 100, display: "flex", gap: 1, overflow: "hidden" }}>
                         {photos.slice(0, 3).map((ph, i) => (
-                          <img key={ph.id} src={ph.src} alt={ph.name}
-                            style={{
-                              flex: i === 0 ? 2 : 1, height: "100%",
-                              objectFit: "cover", display: "block",
-                            }} />
+                          isVideoMedia(ph) ? (
+                            <video key={ph.id} src={ph.src} muted playsInline
+                              style={{
+                                flex: i === 0 ? 2 : 1, height: "100%",
+                                objectFit: "cover", display: "block", minWidth: 0,
+                              }} />
+                          ) : (
+                            <img key={ph.id} src={ph.src} alt={ph.name}
+                              style={{
+                                flex: i === 0 ? 2 : 1, height: "100%",
+                                objectFit: "cover", display: "block", minWidth: 0,
+                              }} />
+                          )
                         ))}
                         {photos.length > 3 && (
                           <div style={{
@@ -548,8 +556,13 @@ export default function ProjectView() {
                     {/* Photos mini */}
                     <div style={{ display: "flex", gap: 3, flexShrink: 0 }}>
                       {photos.slice(0, 2).map((ph) => (
-                        <img key={ph.id} src={ph.src} alt={ph.name}
-                          style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover" }} />
+                        isVideoMedia(ph) ? (
+                          <video key={ph.id} src={ph.src} muted playsInline
+                            style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover" }} />
+                        ) : (
+                          <img key={ph.id} src={ph.src} alt={ph.name}
+                            style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover" }} />
+                        )
                       ))}
                       {photos.length === 0 && (
                         <div style={{
@@ -584,7 +597,7 @@ export default function ProjectView() {
         </div>
 
         {/* ─── Hidden file input ─── */}
-        <input ref={fileInputRef} type="file" multiple accept="image/*"
+        <input ref={fileInputRef} type="file" multiple accept="image/*,video/*"
           style={{ display: "none" }}
           onChange={(e) => handleUpload(e, activeUploadProject.current)} />
 
@@ -681,8 +694,13 @@ export default function ProjectView() {
                             position: "relative", borderRadius: 14, overflow: "hidden",
                             background: "#0f1423", aspectRatio: "16/9", marginBottom: 10,
                           }}>
-                            <img src={lightboxPhoto.src} alt={lightboxPhoto.name}
-                              style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+                            {isVideoMedia(lightboxPhoto) ? (
+                              <video src={lightboxPhoto.src} controls autoPlay
+                                style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+                            ) : (
+                              <img src={lightboxPhoto.src} alt={lightboxPhoto.name}
+                                style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+                            )}
                             {/* Nav */}
                             {photos.length > 1 && (
                               <>
@@ -750,8 +768,13 @@ export default function ProjectView() {
                               }}
                               onClick={() => openLightbox(ph, idx)}
                             >
-                              <img src={ph.src} alt={ph.name}
-                                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                              {isVideoMedia(ph) ? (
+                                <video src={ph.src} muted playsInline
+                                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                              ) : (
+                                <img src={ph.src} alt={ph.name}
+                                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                              )}
                               <div className="photo-overlay">
                                 <div style={{ fontSize: 9, color: "white", textAlign: "center", padding: "0 4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%" }}>
                                   {ph.name}
