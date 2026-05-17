@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  base: '/React-Portfolio/',
   content: [
     "./index.html",
     "./src/**/*.{js,jsx}",

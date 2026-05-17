@@ -1,67 +1,67 @@
-import React from 'react'
-import { useHero } from '../context/HeroContext'
-import Contact from './Contact'
-import About from './About'
-import Profile from './Profile'
-import Content from './Content'
-import Dasboard from '../pages/Dasboard'
+import { useTypewriter } from "./portfolioHooks";
+import heroImage from "../assets/portfolio.png";
 
-const Hero = (props) => {
-    const { active } = useHero()
+const stats = [
+  ["1+", "Years Experience"],
+  ["7+", "Projects Shipped"],
+  ["10+", "Technologies"],
+  ["100%", "Client Satisfaction"],
+];
 
-    const renderContent = () => {
-        switch (active) {
-            case 'about':
-                return (
-                    <div>
-                        <About />
-                    </div>
-                )
-            case 'experience':
-                return (
-                    <div>
-                        <h1 className="text-4xl font-bold">Experience</h1>
-                        <p className="mt-4 max-w-xl">Highlights of my experience shown here.</p>
-                    </div>
-                )
-            case 'contact':
-                return (
-                    <div>
-                        <Contact />
-                    </div>
-                )
-            case 'profile':
-                return (
-                    <div>
-                        <Profile />
-                    </div>
-                )
-                case 'dashboard':
-                return (
-                    <div>
-                        <Dasboard />
-                    </div>
-                )
-            default:'content'
-                return (
-                    <div>
-                        <Content />
-                    </div>
-                )
-        }
-    }
+const Hero = () => {
+  const typed = useTypewriter(["Full Stack Developer", "UI/UX Craftsman", "MERN Specialist", "Problem Solver"]);
 
-    return (
-        <div id="home" className='flex flex-col items-start justify-center px-6 md:px-16 xl:32 text-white bg-[url("/src/assets/laptop.jpg")] bg-no-repeat bg-cover bg-center h-screen'>
-           <div className='flex flex-col'>
-            <div className='absolute left-42'>
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
+  return (
+    <section className="hero">
+      <div className="hero-inner">
+        <div className="hero-content">
+          <div className="hero-copy">
+            <div className="hero-badge reveal visible">Available for Freelance Work</div>
+            <h1 className="hero-title">
+              <span className="line"><span className="word">Kavi</span></span>
+              <span className="line"><span className="word gradient-text">Varman</span></span>
+            </h1>
+            <p className="hero-sub reveal reveal-delay-1 visible">
+              <span style={{ color: "var(--text)", fontWeight: 500 }}>
+                {typed}<span className="typewriter-cursor">|</span>
+              </span>{" "}
+              - crafting high-performance web experiences with React, Node.js and modern tooling.
+            </p>
+            <div className="hero-actions reveal reveal-delay-2 visible">
+              <button className="btn-primary" type="button" onClick={() => scrollTo("contact")}>Let's Work Together</button>
+              <button className="btn-outline" type="button" onClick={() => scrollTo("projects")}>View Projects</button>
             </div>
-            <div>
-              {renderContent()}
+          </div>
+
+          <div className="hero-visual reveal reveal-delay-2 visible" aria-label="Portfolio preview">
+            <div className="hero-visual-ring" />
+            <div className="hero-image-card">
+              <img src={heroImage} alt="Kavi Varman portfolio preview" />
             </div>
-           </div>
+            <div className="hero-floating-card hero-floating-card-top">
+              <span>React</span>
+              <strong>UI Systems</strong>
+            </div>
+            <div className="hero-floating-card hero-floating-card-bottom">
+              <span>MERN</span>
+              <strong>Full Stack</strong>
+            </div>
+          </div>
         </div>
-    )
-}
 
-export default Hero
+        <div className="hero-stats reveal reveal-delay-3 visible">
+          {stats.map(([number, label]) => (
+            <div className="stat-item" key={label}>
+              <div className="stat-num">{number}</div>
+              <div className="stat-label">{label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;

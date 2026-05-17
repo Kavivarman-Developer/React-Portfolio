@@ -1,70 +1,74 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { FaBriefcase, FaEnvelope, FaGithub, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+
+const GITHUB_URL = "https://github.com/Kavivarman-Developer?tab=repositories";
+const LINKEDIN_URL = "https://www.linkedin.com/in/kavivarman-s-ba57382a2";
+
+const contacts = [
+  { icon: <FaPhoneAlt />, label: "Phone", value: "+91 9943958576" },
+  { icon: <FaEnvelope />, label: "Email", value: "kavivarman@example.com" },
+  { icon: <FaMapMarkerAlt />, label: "Location", value: "Pudukkottai, Tamil Nadu" },
+];
 
 const ContactForm = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [sent, setSent] = useState(false);
 
-    const [isOpen, setIsOpen] = useState(true);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSent(true);
+    window.setTimeout(() => setSent(false), 3000);
+    setFormData({ name: "", email: "", message: "" });
+  };
 
-    const handleClose = () => {
-        setIsOpen(false)
-        // navigate to content section on home after short delay
-
-    }
-
-    return (
-        <>
-            {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-                    <div
-                        className="fixed inset-0 bg-black/40"
-                        onClick={handleClose}
-                    />
-
-                    <div className="relative z-10 w-full max-w-md">
-                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden">
-                            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-md bg-gradient-to-r from-indigo-600 to-teal-400 flex items-center justify-center text-white font-bold">CV</div>
-                                    <h3 className="text-lg font-semibold text-slate-900">Contact</h3>
-                                </div>
-                                <button
-                                    aria-label="Close"
-                                    onClick={handleClose}
-                                    className="text-slate-500 hover:text-slate-700 rounded-md p-1"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-
-                            <div className="px-6 py-6">
-                                <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm text-slate-600 mb-1">Email</label>
-                                        <input type="email" required className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="name@company.com" />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm text-slate-600 mb-1">Subject</label>
-                                        <input type="text" className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="How can we help?" />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm text-slate-600 mb-1">Message</label>
-                                        <textarea rows={4} className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Your message..." />
-                                    </div>
-
-                                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-medium">Send message</button>
-                                </form>
-                                <div className="mt-4 text-center text-sm text-slate-500">
-                                    <a href="mailto:info@company.com" className="underline">info@company.com</a> • <a href="tel:2124567890" className="underline">212-456-7890</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <section id="contact" className="section">
+      <div className="section-inner">
+        <div className="section-label reveal">Let's Connect</div>
+        <h2 className="section-title reveal reveal-delay-1">Start a <span className="gradient-text">Project</span></h2>
+        <div className="contact-grid">
+          <div className="reveal reveal-delay-1">
+            <p style={{ color: "var(--muted)", fontSize: 16, lineHeight: 1.7, marginBottom: 36 }}>
+              Have a project in mind? I am open to freelance work, full-time opportunities, and interesting collaborations. Let's build something remarkable together.
+            </p>
+            {contacts.map((contact) => (
+              <div className="contact-info-item" key={contact.label}>
+                <div className="contact-icon">{contact.icon}</div>
+                <div>
+                  <div className="contact-label">{contact.label}</div>
+                  <div className="contact-value">{contact.value}</div>
                 </div>
-            )}
-        </>
-    )
+              </div>
+            ))}
+            <div className="social-links">
+              <a className="social-link" href={GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub /></a>
+              <a className="social-link" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedinIn /></a>
+              <a className="social-link" href="#" aria-label="Portfolio"><FaBriefcase /></a>
+            </div>
+          </div>
+          <div className="reveal reveal-delay-2">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Your Name</label>
+                <input id="name" className="form-input" placeholder="John Doe" value={formData.name} onChange={(event) => setFormData((prev) => ({ ...prev, name: event.target.value }))} required />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="email">Email Address</label>
+                <input id="email" className="form-input" type="email" placeholder="john@company.com" value={formData.email} onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))} required />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="message">Message</label>
+                <textarea id="message" className="form-input" placeholder="Tell me about your project..." value={formData.message} onChange={(event) => setFormData((prev) => ({ ...prev, message: event.target.value }))} required />
+              </div>
+              <button type="submit" className="btn-primary" style={{ width: "100%", fontSize: 15 }}>
+                {sent ? "Message Sent!" : "Send Message"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-}
-
-export default ContactForm
+export default ContactForm;

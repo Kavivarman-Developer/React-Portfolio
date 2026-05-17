@@ -1,56 +1,72 @@
-import { motion } from "framer-motion";
-import portfolioImage from '../assets/portfolio.png'
+import { motion } from 'framer-motion'
 
 const Content = () => {
     return (
-        <section id="content" className="w-full">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 lg:py-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    {/* Left column: headline, description, CTAs */}
-                    <div className="flex flex-col items-center md:items-start text-center md:text-left gap-6">
-                        <span className="inline-block px-3 py-1 bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-600 rounded-full text-sm font-semibold">Mern Stack Developer</span>
+        <section id="content" style={{ width: '100%', fontFamily: "'DM Sans', sans-serif" }}>
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 32px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+
+                    {/* Left */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <span style={{
+                            display: 'inline-block', padding: '6px 16px', borderRadius: 100,
+                            background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.2)',
+                            fontSize: 11, fontWeight: 600, letterSpacing: '1.5px',
+                            textTransform: 'uppercase', color: '#00e5ff', width: 'fit-content',
+                        }}>
+                            MERN Stack Developer
+                        </span>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 24 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
-                            className="font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight"
+                            style={{
+                                fontFamily: "'Syne', sans-serif",
+                                fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800,
+                                lineHeight: 1.05, letterSpacing: '-2px', color: '#f0f4ff',
+                                margin: 0,
+                            }}
                         >
-                            Hi, I'm <span className="text-indigo-600">Kavi Varman</span>
+                            Hi, I'm{' '}
+                            <span style={{
+                                background: 'linear-gradient(135deg, #00e5ff, #7c3aed)',
+                                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                            }}>
+                                Kavi Varman
+                            </span>
                         </motion.h1>
 
-                        <p className="max-w-xl text-gray-400 text-base sm:text-lg">
-                            I build responsive, accessible React applications with a focus on clean UI and delightful user
-                            interactions. Currently available for freelance and contract work.
+                        <p style={{ color: '#8b98b8', fontSize: 17, lineHeight: 1.7, maxWidth: 480, margin: 0 }}>
+                            I build responsive, accessible React applications with a focus on clean UI and delightful user interactions. Currently available for freelance and contract work.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-2">
+                        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                             <a
                                 href="#contact"
-                                className="inline-flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 transition"
+                                style={{
+                                    padding: '13px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
+                                    background: 'linear-gradient(135deg, #00e5ff, #7c3aed)',
+                                    color: 'white', textDecoration: 'none',
+                                }}
                             >
                                 Contact Me
                             </a>
                             <a
                                 href="#projects"
-                                className="inline-flex items-center justify-center px-5 py-3 border border-gray-200 text-gray-400 rounded-md hover:bg-gray-50 transition"
+                                style={{
+                                    padding: '13px 28px', borderRadius: 12, fontSize: 15, fontWeight: 600,
+                                    background: 'transparent', color: '#f0f4ff',
+                                    border: '1px solid rgba(255,255,255,0.14)', textDecoration: 'none',
+                                    transition: 'all 0.3s',
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.borderColor = '#00e5ff'; e.currentTarget.style.color = '#00e5ff'; }}
+                                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.color = '#f0f4ff'; }}
                             >
                                 View Projects
                             </a>
                         </div>
                     </div>
-
-                    {/* Right column: profile image */}
-                    {/* <div className="flex items-center justify-center md:justify-end">
-                        <div className="relative">
-                            <div className="hidden sm:block absolute transform rotate-1"></div>
-                            <img
-                                src={portfolioImage}
-                                alt="Kavi Varman"
-                                className="relative w-64 sm:w-72 md:w-80 lg:w-96 xl:w-[420px] rounded-xl shadow-2xl object-cover"
-                            />
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </section>
