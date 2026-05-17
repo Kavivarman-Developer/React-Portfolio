@@ -111,53 +111,77 @@ export default function ProjectView() {
     );
   });
 
+  // ── Cloudinary upload ────────────────────────────────────────────────────
+  const CLOUD_NAME = "dns4pdqve";
+  const UPLOAD_PRESET = "Portfolio_Upload";
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: formData }
+    );
+    const data = await res.json();
+    if (!data.secure_url) throw new Error("Cloudinary upload failed");
+    return data.secure_url;
+  };
+
   const readFiles = (files, projectId) =>
     Promise.all(
       Array.from(files)
         .filter((f) => f.type.startsWith("image/"))
-        .map(
-          (file) =>
-            new Promise((resolve) => {
-              const reader = new FileReader();
-              reader.onload = (ev) =>
-                resolve({
-                  id: `pp-${projectId}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-                  projectId,
-                  name: file.name,
-                  src: ev.target.result,
-                  size: (file.size / 1024).toFixed(1) + " KB",
-                  addedAt: new Date().toLocaleDateString(),
-                });
-              reader.readAsDataURL(file);
-            })
-        )
+        .map(async (file) => {
+          const url = await uploadToCloudinary(file);
+          return {
+            id: `pp-${projectId}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            projectId,
+            name: file.name,
+            src: url,
+            size: (file.size / 1024).toFixed(1) + " KB",
+            addedAt: new Date().toLocaleDateString(),
+          };
+        })
     );
 
   const handleUpload = async (e, projectId) => {
     const files = Array.from(e.target.files).filter((f) => f.type.startsWith("image/"));
     if (!files.length) return;
     setUploading(true);
-    const newPhotos = await readFiles(files, projectId);
-    for (const p of newPhotos) await dbPut(PHOTOS_STORE, p);
-    setPhotosByProject((prev) => ({
-      ...prev,
-      [projectId]: [...(prev[projectId] || []), ...newPhotos],
-    }));
-    setUploading(false);
-    e.target.value = "";
+    try {
+      const newPhotos = await readFiles(files, projectId);
+      for (const p of newPhotos) await dbPut(PHOTOS_STORE, p);
+      setPhotosByProject((prev) => ({
+        ...prev,
+        [projectId]: [...(prev[projectId] || []), ...newPhotos],
+      }));
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed. Check your Cloudinary settings.");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
   };
 
   const handleDrop = async (e, projectId) => {
     e.preventDefault();
     setDraggingOver(false);
     setUploading(true);
-    const newPhotos = await readFiles(e.dataTransfer.files, projectId);
-    for (const p of newPhotos) await dbPut(PHOTOS_STORE, p);
-    setPhotosByProject((prev) => ({
-      ...prev,
-      [projectId]: [...(prev[projectId] || []), ...newPhotos],
-    }));
-    setUploading(false);
+    try {
+      const newPhotos = await readFiles(e.dataTransfer.files, projectId);
+      for (const p of newPhotos) await dbPut(PHOTOS_STORE, p);
+      setPhotosByProject((prev) => ({
+        ...prev,
+        [projectId]: [...(prev[projectId] || []), ...newPhotos],
+      }));
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed. Check your Cloudinary settings.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDeletePhoto = async (photoId, projectId) => {

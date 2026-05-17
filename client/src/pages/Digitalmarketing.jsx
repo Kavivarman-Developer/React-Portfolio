@@ -77,6 +77,7 @@ const DigitalMarketing = () => {
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false); // mobile drawer
   const [isMobile, setIsMobile] = useState(false);
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
@@ -121,26 +122,39 @@ const DigitalMarketing = () => {
   const currentPhotos = photosByFolder[activeFolder] || [];
   const currentFolder = folders.find((f) => f.id === activeFolder);
 
+  // ── Cloudinary upload ────────────────────────────────────────────────────
+  const CLOUD_NAME = "dns4pdqve";
+  const UPLOAD_PRESET = "Portfolio_Upload";
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: formData }
+    );
+    const data = await res.json();
+    if (!data.secure_url) throw new Error("Cloudinary upload failed");
+    return data.secure_url;
+  };
+
   const readFiles = (files) =>
     Promise.all(
       Array.from(files)
         .filter((f) => f.type.startsWith("image/"))
-        .map((file) =>
-          new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) =>
-              resolve({
-                id: `photo-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-                folderId: activeFolder,
-                name: file.name,
-                src: e.target.result,
-                size: (file.size / 1024).toFixed(1) + " KB",
-                type: file.type.split("/")[1].toUpperCase(),
-                addedAt: new Date().toLocaleDateString(),
-              });
-            reader.readAsDataURL(file);
-          })
-        )
+        .map(async (file) => {
+          const url = await uploadToCloudinary(file);
+          return {
+            id: `photo-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            folderId: activeFolder,
+            name: file.name,
+            src: url,
+            size: (file.size / 1024).toFixed(1) + " KB",
+            type: file.type.split("/")[1].toUpperCase(),
+            addedAt: new Date().toLocaleDateString(),
+          };
+        })
     );
 
   const addPhotos = async (newPhotos) => {
@@ -155,13 +169,29 @@ const DigitalMarketing = () => {
   const handleDrop = useCallback(async (e) => {
     e.preventDefault();
     setDraggingOver(false);
-    const photos = await readFiles(e.dataTransfer.files);
-    await addPhotos(photos);
+    setUploading(true);
+    try {
+      const photos = await readFiles(e.dataTransfer.files);
+      await addPhotos(photos);
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed. Check your Cloudinary settings.");
+    } finally {
+      setUploading(false);
+    }
   }, [activeFolder]);
 
   const handleFileInput = async (e) => {
-    const photos = await readFiles(e.target.files);
-    await addPhotos(photos);
+    setUploading(true);
+    try {
+      const photos = await readFiles(e.target.files);
+      await addPhotos(photos);
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed. Check your Cloudinary settings.");
+    } finally {
+      setUploading(false);
+    }
     e.target.value = "";
   };
 
@@ -589,12 +619,12 @@ const DigitalMarketing = () => {
                     color: "#fb7185", cursor: "pointer", fontFamily: "'Space Grotesk', sans-serif",
                   }}>🗑 Delete {selectedPhotos.length}</button>
                 )}
-                <button onClick={() => fileInputRef.current?.click()} style={{
+                <button onClick={() => !uploading && fileInputRef.current?.click()} style={{
                   padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700,
-                  background: "linear-gradient(135deg, #00e5ff, #8b5cf6)",
-                  border: "none", color: "white", cursor: "pointer",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}>+ Upload</button>
+                  background: uploading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg, #00e5ff, #8b5cf6)",
+                  border: "none", color: "white", cursor: uploading ? "not-allowed" : "pointer",
+                  fontFamily: "'Space Grotesk', sans-serif", opacity: uploading ? 0.7 : 1,
+                }}>{uploading ? "⏳ Uploading..." : "+ Upload"}</button>
                 <input ref={fileInputRef} type="file" multiple accept="image/*"
                   style={{ display: "none" }} onChange={handleFileInput} />
               </div>
