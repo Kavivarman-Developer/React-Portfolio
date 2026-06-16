@@ -12,13 +12,18 @@ import {
   SiTailwindcss,
 } from "react-icons/si";
 import { TbApi, TbBolt, TbCode, TbRocket, TbSearch, TbSparkles } from "react-icons/tb";
+import projectCRM from "../assets/portfolio.png";
+import projectVisitor from "../assets/regImage.png";
+import projectAI from "../assets/exclusiveOfferCardImg1.png";
+import projectDashboard from "../assets/exclusiveOfferCardImg2.png";
 
 export const PROJECTS = [
   {
     num: "01",
     color: "#00e5ff",
+    image: projectCRM,
     title: "Real-Time CRM System",
-    desc: "Enterprise-grade CRM with live updates, pipeline management, and AI-powered lead scoring.",
+    desc: "Enterprise-grade CRM with live updates, pipeline management, and lead scoring.",
     stack: [["React", "cyan"], ["Socket.IO", "violet"], ["Node.js", "green"], ["MongoDB", "pink"]],
     github: "#",
     demo: "#",
@@ -26,6 +31,7 @@ export const PROJECTS = [
   {
     num: "02",
     color: "#7c3aed",
+    image: projectVisitor,
     title: "Visitor Management System",
     desc: "Smart check-in platform with QR codes, badge printing, and real-time host notifications.",
     stack: [["React", "cyan"], ["Express", "violet"], ["Firebase", "pink"], ["REST API", "green"]],
@@ -35,6 +41,7 @@ export const PROJECTS = [
   {
     num: "03",
     color: "#f472b6",
+    image: projectAI,
     title: "AI Course Platform",
     desc: "Adaptive learning platform with AI-curated paths, progress analytics, and live sessions.",
     stack: [["React", "cyan"], ["Node.js", "green"], ["MongoDB", "pink"], ["Tailwind", "violet"]],
@@ -44,6 +51,7 @@ export const PROJECTS = [
   {
     num: "04",
     color: "#10b981",
+    image: projectDashboard,
     title: "Call Management Dashboard",
     desc: "Unified comms dashboard with VoIP integration, call analytics, and team performance metrics.",
     stack: [["React", "cyan"], ["Socket.IO", "violet"], ["REST API", "green"], ["Framer Motion", "pink"]],

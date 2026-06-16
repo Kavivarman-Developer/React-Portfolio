@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 import { PROJECTS } from "./portfolioData";
 
 const pillClass = { cyan: "pill-cyan", violet: "pill-violet", pink: "pill-pink", green: "pill-green" };
+const AUTO_SCROLL_DELAY = 5000;
 
 const Projects = () => {
   const [activeProject, setActiveProject] = useState(0);
   const prevProject = () => setActiveProject((index) => (index - 1 + PROJECTS.length) % PROJECTS.length);
   const nextProject = () => setActiveProject((index) => (index + 1) % PROJECTS.length);
+
+  useEffect(() => {
+    const interval = window.setInterval(nextProject, AUTO_SCROLL_DELAY);
+    return () => window.clearInterval(interval);
+  }, []);
+
   const visibleProjects = [
     (activeProject - 1 + PROJECTS.length) % PROJECTS.length,
     activeProject,
@@ -36,6 +43,11 @@ const Projects = () => {
 
             return (
               <article className={`project-card ${isActive ? "is-active" : "is-side"}`} key={`${project.num}-${slot}`} onClick={() => setActiveProject(projectIndex)}>
+                {project.image && (
+                  <div className="project-image">
+                    <img src={project.image} alt={`${project.title} screenshot`} />
+                  </div>
+                )}
                 <div className="project-header">
                   <div className="project-glow" style={{ background: project.color }} />
                   <div className="project-num">Project {project.num}</div>
@@ -49,8 +61,8 @@ const Projects = () => {
                     ))}
                   </div>
                   <div className="project-actions">
-                    <a className="project-btn" href={project.github} onClick={(event) => event.stopPropagation()}><FaGithub /> GitHub</a>
-                    <a className="project-btn primary" href={project.demo} onClick={(event) => event.stopPropagation()}><FaExternalLinkAlt /> Live Demo</a>
+                    <a className="project-btn" href={project.github} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}><FaGithub /> GitHub</a>
+                    <a className="project-btn primary" href={project.demo} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}><FaExternalLinkAlt /> Live Demo</a>
                   </div>
                 </div>
               </article>
