@@ -6,6 +6,7 @@ import Experience from "../components/Experience";
 import Hero from "../components/Hero";
 import Navbar from "../components/Navbar";
 import PortfolioEffects from "../components/PortfolioEffects";
+import ProjectSpotlight from "../components/ProjectSpotlight";
 import Projects from "../components/Projects";
 import Services from "../components/Services";
 import SiteFooter from "../components/SiteFooter";
@@ -28,6 +29,7 @@ const Home = () => {
       <ContactForm />
       <SiteFooter />
       <BackToTop />
+      <ProjectSpotlight />
     </div>
   );
 };

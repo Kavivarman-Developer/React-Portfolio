@@ -17,6 +17,7 @@ import projectAI from "../assets/exclusiveOfferCardImg1.png";
 import projectDashboard from "../assets/exclusiveOfferCardImg2.png";
 
 const projectArris = "https://image.thum.io/get/width/1400/crop/850/https://arris-website.vercel.app/";
+const projectAarisErp = "https://image.thum.io/get/width/1400/crop/850/https://aaris-erp.vercel.app/login";
 
 export const PROJECTS = [
   {
@@ -31,6 +32,16 @@ export const PROJECTS = [
   },
   {
     num: "02",
+    color: "#0ea5e9",
+    image: projectAarisErp,
+    title: "AARIS ERP",
+    desc: "A secure ERP login and business console concept with authentication-ready screens, clean form UX, and admin workflow foundations.",
+    stack: [["React", "cyan"], ["ERP UI", "violet"], ["Auth Flow", "green"], ["Vercel", "pink"]],
+    github: "#",
+    demo: "https://aaris-erp.vercel.app/login",
+  },
+  {
+    num: "03",
     color: "#0f766e",
     image: projectArris,
     title: "AARIS Group Website",
@@ -40,7 +51,7 @@ export const PROJECTS = [
     demo: "https://arris-website.vercel.app/",
   },
   {
-    num: "03",
+    num: "04",
     color: "#9333ea",
     image: projectAI,
     title: "Learning Platform UI",
@@ -50,13 +61,51 @@ export const PROJECTS = [
     demo: "#",
   },
   {
-    num: "04",
+    num: "05",
     color: "#ea580c",
     image: projectDashboard,
     title: "Operations Dashboard",
     desc: "A dashboard-style interface for viewing activity, reports, and team metrics with a clear information hierarchy.",
     stack: [["React", "cyan"], ["Socket.IO", "violet"], ["REST API", "green"], ["Framer Motion", "pink"]],
     github: "#",
+    demo: "#",
+  },
+];
+
+export const PROJECT_ADS = [
+  {
+    kicker: "ERP Concept",
+    title: "AARIS ERP",
+    copy: "Secure login screens, admin-console structure, and business workflow UI for real ERP usage.",
+    projectTitle: "AARIS ERP",
+    demo: "https://aaris-erp.vercel.app/login",
+  },
+  {
+    kicker: "Business Website",
+    title: "AARIS Group Website",
+    copy: "Service-focused website design with responsive pages, clear navigation, and direct contact actions.",
+    projectTitle: "AARIS Group Website",
+    demo: "https://arris-website.vercel.app/",
+  },
+  {
+    kicker: "Dashboard UI",
+    title: "SAP Frontend Project",
+    copy: "Data-heavy business screens built with React, reusable layouts, and production deployment polish.",
+    projectTitle: "SAP Frontend Project",
+    demo: "https://sap-project-frontend-eight.vercel.app/",
+  },
+  {
+    kicker: "MERN App",
+    title: "Learning Platform UI",
+    copy: "Course, progress, and admin-friendly content screens designed for scalable learning products.",
+    projectTitle: "Learning Platform UI",
+    demo: "#",
+  },
+  {
+    kicker: "Realtime Ops",
+    title: "Operations Dashboard",
+    copy: "Reporting, metrics, and activity views shaped for teams that need fast operational clarity.",
+    projectTitle: "Operations Dashboard",
     demo: "#",
   },
 ];
