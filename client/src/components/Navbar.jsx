@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -107,7 +106,9 @@ const Navbar = () => {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          <span />
+          <span />
+          <span />
         </button>
       </div>
 

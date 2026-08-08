@@ -1,10 +1,18 @@
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { PROJECTS } from "./portfolioData";
 
 const pillClass = { cyan: "pill-cyan", violet: "pill-violet", pink: "pill-pink", green: "pill-green" };
 
 const Projects = () => {
+  const navigate = useNavigate();
+
+  const openProjectsPage = () => {
+    toast.success("Opening all projects", { id: "all-projects", duration: 1500 });
+    navigate("/projects");
+  };
+
   return (
     <section id="projects" className="section">
       <div className="section-inner">
@@ -16,7 +24,10 @@ const Projects = () => {
               Scroll through production websites, dashboards, and application interfaces. Each project is presented like a compact case study.
             </p>
           </div>
-          <div className="project-scroll-note reveal reveal-delay-2">Scroll sideways</div>
+          <div className="project-head-actions reveal reveal-delay-2">
+            <button className="project-view-all" type="button" onClick={openProjectsPage}>View All Projects</button>
+            <div className="project-scroll-note">Scroll sideways</div>
+          </div>
         </div>
 
         <div className="projects-slider reveal reveal-delay-3" aria-label="Auto sliding project showcase">

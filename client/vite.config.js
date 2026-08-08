@@ -98,7 +98,7 @@ function localUploadPlugin() {
           const saved = files.map((file) => {
             const fileName = sanitizeFileName(file.originalName)
             const filePath = path.join(uploadDir, fileName)
-            fs.writeFileSync(filePath, file.data)
+            fs.writeFileSync(filePath, file.data) 
             return {
               fileName,
               originalName: file.originalName,

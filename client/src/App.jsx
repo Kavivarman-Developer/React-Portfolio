@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Home from './pages/Home';
 import Dasboard from './pages/Dasboard';
+import AllProjects from './pages/AllProjects';
 import Loader from './components/Loader';
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
       />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<AllProjects />} />
         <Route path="/dashboard" element={<Dasboard />} />
         <Route path="*" element={<Home />} />
       </Routes>
