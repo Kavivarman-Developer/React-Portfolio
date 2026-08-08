@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { FaDownload } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
+import { RESUME_BUTTON_ART, RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
 
 const links = ["About", "Skills", "Projects", "Experience", "Contact"];
 
@@ -103,7 +102,7 @@ const Navbar = () => {
           </button>
 
           <a className="nav-resume" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME} aria-label="Download resume">
-            <FaDownload />
+            <img src={RESUME_BUTTON_ART} alt="" aria-hidden="true" />
             <span>Resume</span>
           </a>
         </div>
@@ -142,8 +141,9 @@ const Navbar = () => {
         <button type="button" onClick={() => scrollToSection("contact")}>
           Available for Work
         </button>
-        <a href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
-          Download Resume
+        <a className="mobile-resume-link" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
+          <img src={RESUME_BUTTON_ART} alt="" aria-hidden="true" />
+          <span>Download Resume</span>
         </a>
       </div>
     </nav>

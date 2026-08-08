@@ -1,5 +1,4 @@
-import { FaDownload } from "react-icons/fa";
-import { RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
+import { RESUME_BUTTON_ART, RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
 
 const stats = [
   ["1+", "Years Experience"],
@@ -28,7 +27,8 @@ const Hero = () => {
             <div className="hero-actions reveal reveal-delay-2 visible">
               <button className="btn-primary" type="button" onClick={() => scrollTo("projects")}>View Projects</button>
               <a className="btn-resume" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
-                <FaDownload /> Download Resume
+                <img src={RESUME_BUTTON_ART} alt="" aria-hidden="true" />
+                <span>Download Resume</span>
               </a>
               <button className="btn-outline" type="button" onClick={() => scrollTo("contact")}>Let's Work Together</button>
             </div>
