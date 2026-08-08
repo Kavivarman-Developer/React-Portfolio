@@ -19,9 +19,10 @@ const Projects = () => {
           <div className="project-scroll-note reveal reveal-delay-2">Scroll sideways</div>
         </div>
 
-        <div className="projects-slider reveal reveal-delay-3" aria-label="Scrollable project showcase">
-          {PROJECTS.map((project) => (
-            <div className="project-card-shell" key={project.num}>
+        <div className="projects-slider reveal reveal-delay-3" aria-label="Auto sliding project showcase">
+          <div className="projects-track">
+          {[...PROJECTS, ...PROJECTS, ...PROJECTS, ...PROJECTS].map((project, index) => (
+            <div className="project-card-shell" key={`${project.num}-${index}`}>
               <article className="project-card">
                 {project.image && (
                   <div className="project-image">
@@ -60,6 +61,7 @@ const Projects = () => {
               </article>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>

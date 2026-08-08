@@ -2051,17 +2051,16 @@
   }
 
   .projects-slider::-webkit-scrollbar {
-    height: 8px;
+    display: none;
+    height: 0;
   }
 
   .projects-slider::-webkit-scrollbar-track {
-    background: rgba(11,15,20,0.08);
-    border-radius: 999px;
+    background: transparent;
   }
 
   .projects-slider::-webkit-scrollbar-thumb {
-    background: var(--accent-teal);
-    border-radius: 999px;
+    background: transparent;
   }
 
   .project-card {
@@ -2755,6 +2754,10 @@
       transform: translateX(0) !important;
       width: 100%;
     }
+
+    .projects-track {
+      animation: none !important;
+    }
   }
 
   /* Curved project showcase */
@@ -2764,8 +2767,35 @@
 
   .projects-slider {
     align-items: stretch;
-    padding: 10px 6px 22px;
+    padding: 10px 6px 10px;
     perspective: 1100px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .projects-track {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    width: max-content;
+    animation: projectAutoSlide 36s linear infinite;
+    will-change: transform;
+  }
+
+  .projects-slider:hover .projects-track,
+  .projects-slider:focus-within .projects-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes projectAutoSlide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-25% - 10.5px));
+    }
   }
 
   .project-card-shell {
@@ -2849,6 +2879,15 @@
   }
 
   @media (max-width: 768px) {
+    .projects-track {
+      animation-duration: 24s;
+    }
+
+    .projects-slider {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
     .project-card-shell,
     .project-card-shell:nth-child(even),
     .project-card-shell:nth-child(3n) {
