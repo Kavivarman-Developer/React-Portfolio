@@ -1,7 +1,7 @@
 const experience = [
-  { period: "2023 - Present", role: "Full Stack Developer", company: "Freelance / Remote", desc: "Delivered 7+ production applications across CRM, EdTech, and SaaS verticals. Specialized in real-time features with Socket.IO and modern React patterns." },
-  { period: "2022 - 2023", role: "Frontend Developer", company: "Startup, Tamil Nadu", desc: "Built responsive React UIs with Tailwind CSS. Integrated REST APIs and Firebase services. Improved Lighthouse performance scores by 40%." },
-  { period: "2021 - 2022", role: "Web Developer Intern", company: "Agency, Pudukkottai", desc: "Developed client websites using HTML, CSS, JavaScript, and PHP. Handled WordPress customization and SEO optimization." },
+  { period: "2023 - Present", role: "Full Stack Developer", company: "Freelance / Remote", desc: "Built React and MERN stack projects including dashboards, forms, admin screens, and deployed frontend applications." },
+  { period: "2022 - 2023", role: "Frontend Developer", company: "Project-based Work", desc: "Created responsive interfaces, connected REST APIs, and improved UI consistency across desktop and mobile screens." },
+  { period: "2021 - 2022", role: "Web Developer Intern", company: "Pudukkottai", desc: "Worked with HTML, CSS, JavaScript, PHP, and basic SEO while learning practical client website development." },
 ];
 
 const Experience = () => {
@@ -10,7 +10,7 @@ const Experience = () => {
       <div className="section-inner experience-layout">
         <div>
           <div className="section-label reveal">Journey</div>
-          <h2 className="section-title reveal reveal-delay-1">Work <span className="gradient-text">Experience</span></h2>
+          <h2 className="section-title reveal reveal-delay-1">Experience</h2>
           <p className="section-desc reveal reveal-delay-2">Building real products, solving real problems.</p>
         </div>
         <div className="exp-timeline">

@@ -11,49 +11,50 @@ import {
   SiSocketdotio,
   SiTailwindcss,
 } from "react-icons/si";
-import { TbApi, TbBolt, TbCode, TbRocket, TbSearch, TbSparkles } from "react-icons/tb";
+import { TbApi, TbBolt, TbCode, TbRocket, TbSparkles } from "react-icons/tb";
 import projectCRM from "../assets/portfolio.png";
-import projectVisitor from "../assets/regImage.png";
 import projectAI from "../assets/exclusiveOfferCardImg1.png";
 import projectDashboard from "../assets/exclusiveOfferCardImg2.png";
+
+const projectArris = "https://image.thum.io/get/width/1400/crop/850/https://arris-website.vercel.app/";
 
 export const PROJECTS = [
   {
     num: "01",
-    color: "#00e5ff",
+    color: "#2563eb",
     image: projectCRM,
-    title: "Real-Time CRM System",
-    desc: "Enterprise-grade CRM with live updates, pipeline management, and lead scoring.",
-    stack: [["React", "cyan"], ["Socket.IO", "violet"], ["Node.js", "green"], ["MongoDB", "pink"]],
+    title: "SAP Frontend Project",
+    desc: "A deployed business dashboard frontend focused on clean navigation, responsive layouts, and practical data screens.",
+    stack: [["React", "cyan"], ["Vite", "violet"], ["Responsive UI", "green"], ["Vercel", "pink"]],
     github: "#",
-    demo: "#",
+    demo: "https://sap-project-frontend-eight.vercel.app/",
   },
   {
     num: "02",
-    color: "#7c3aed",
-    image: projectVisitor,
-    title: "Visitor Management System",
-    desc: "Smart check-in platform with QR codes, badge printing, and real-time host notifications.",
-    stack: [["React", "cyan"], ["Express", "violet"], ["Firebase", "pink"], ["REST API", "green"]],
+    color: "#0f766e",
+    image: projectArris,
+    title: "AARIS Group Website",
+    desc: "A multi-business service portal for online services, mobiles, home appliances, tours and travel, with clear contact actions.",
+    stack: [["React", "cyan"], ["Vercel", "violet"], ["Responsive UI", "green"], ["Business Website", "pink"]],
     github: "#",
-    demo: "#",
+    demo: "https://arris-website.vercel.app/",
   },
   {
     num: "03",
-    color: "#f472b6",
+    color: "#9333ea",
     image: projectAI,
-    title: "AI Course Platform",
-    desc: "Adaptive learning platform with AI-curated paths, progress analytics, and live sessions.",
+    title: "Learning Platform UI",
+    desc: "Course browsing, progress tracking, and admin-friendly content screens built with reusable React components.",
     stack: [["React", "cyan"], ["Node.js", "green"], ["MongoDB", "pink"], ["Tailwind", "violet"]],
     github: "#",
     demo: "#",
   },
   {
     num: "04",
-    color: "#10b981",
+    color: "#ea580c",
     image: projectDashboard,
-    title: "Call Management Dashboard",
-    desc: "Unified comms dashboard with VoIP integration, call analytics, and team performance metrics.",
+    title: "Operations Dashboard",
+    desc: "A dashboard-style interface for viewing activity, reports, and team metrics with a clear information hierarchy.",
     stack: [["React", "cyan"], ["Socket.IO", "violet"], ["REST API", "green"], ["Framer Motion", "pink"]],
     github: "#",
     demo: "#",
@@ -76,13 +77,41 @@ export const SKILLS = [
   { icon: <FaGithub />, name: "GitHub" },
 ];
 
+export const SKILL_GROUPS = [
+  {
+    label: "Frontend",
+    items: [
+      { icon: <SiReact />, name: "React.js" },
+      { icon: <SiTailwindcss />, name: "Tailwind" },
+      { icon: <SiBootstrap />, name: "Bootstrap" },
+      { icon: <TbSparkles />, name: "Framer Motion" },
+    ],
+  },
+  {
+    label: "Backend",
+    items: [
+      { icon: <SiNodedotjs />, name: "Node.js" },
+      { icon: <SiExpress />, name: "Express.js" },
+      { icon: <TbApi />, name: "REST APIs" },
+      { icon: <SiPhp />, name: "PHP" },
+    ],
+  },
+  {
+    label: "Database & Tools",
+    items: [
+      { icon: <SiMongodb />, name: "MongoDB" },
+      { icon: <SiMysql />, name: "MySQL" },
+      { icon: <SiFirebase />, name: "Firebase" },
+      { icon: <FaGithub />, name: "GitHub" },
+    ],
+  },
+];
+
 export const SERVICES = [
-  { icon: <TbCode />, title: "Full Stack Development", desc: "End-to-end web applications built with React, Node.js, and MongoDB. From idea to production." },
-  { icon: <TbSparkles />, title: "UI/UX Design", desc: "Premium, accessible interfaces crafted with Figma and Framer Motion for delightful user experiences." },
-  { icon: <TbBolt />, title: "Real-Time Systems", desc: "Live dashboards, chat apps, and collaborative tools powered by Socket.IO and WebSockets." },
-  { icon: <TbSearch />, title: "SEO Optimization", desc: "Technical SEO, performance tuning, and Core Web Vitals optimization for maximum visibility." },
-  { icon: <TbApi />, title: "API Integration", desc: "Seamless third-party integrations, REST API design, and cloud service connectivity." },
-  { icon: <TbRocket />, title: "Performance Audit", desc: "Lighthouse scores, bundle analysis, lazy loading, and code splitting for blazing fast apps." },
+  { icon: <TbCode />, title: "Frontend Development", desc: "React screens, dashboards, and responsive interfaces built with maintainable components." },
+  { icon: <TbBolt />, title: "Full-Stack MERN Apps", desc: "Node, Express, MongoDB, auth flows, forms, and admin features for working products." },
+  { icon: <TbApi />, title: "API Design & Integration", desc: "Connecting frontends to REST APIs, Firebase, third-party services, and backend workflows." },
+  { icon: <TbRocket />, title: "Freelance / Remote Collaboration", desc: "Clear communication, production deployment support, and steady project delivery." },
 ];
 
 export const TESTIMONIALS = [

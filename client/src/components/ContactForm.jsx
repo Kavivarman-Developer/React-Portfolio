@@ -25,11 +25,11 @@ const ContactForm = () => {
     <section id="contact" className="section">
       <div className="section-inner">
         <div className="section-label reveal">Let's Connect</div>
-        <h2 className="section-title reveal reveal-delay-1">Start a <span className="gradient-text">Project</span></h2>
+        <h2 className="section-title reveal reveal-delay-1">Contact</h2>
         <div className="contact-grid">
           <div className="reveal reveal-delay-1">
             <p style={{ color: "var(--muted)", fontSize: 16, lineHeight: 1.7, marginBottom: 36 }}>
-              Have a project in mind? I am open to freelance work, full-time opportunities, and interesting collaborations. Let's build something remarkable together.
+              Have a project, role, or collaboration in mind? Send the details and I will get back to you.
             </p>
             {contacts.map((contact) => (
               <div className="contact-info-item" key={contact.label}>
@@ -50,11 +50,11 @@ const ContactForm = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label" htmlFor="name">Your Name</label>
-                <input id="name" className="form-input" placeholder="John Doe" value={formData.name} onChange={(event) => setFormData((prev) => ({ ...prev, name: event.target.value }))} required />
+                <input id="name" className="form-input" placeholder="Your name" value={formData.name} onChange={(event) => setFormData((prev) => ({ ...prev, name: event.target.value }))} required />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="email">Email Address</label>
-                <input id="email" className="form-input" type="email" placeholder="john@company.com" value={formData.email} onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))} required />
+                <input id="email" className="form-input" type="email" placeholder="yourmail@example.com" value={formData.email} onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))} required />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="message">Message</label>

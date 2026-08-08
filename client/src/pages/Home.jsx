@@ -10,7 +10,6 @@ import Projects from "../components/Projects";
 import Services from "../components/Services";
 import SiteFooter from "../components/SiteFooter";
 import Skills from "../components/Skills";
-import Testimonials from "../components/Testimonials";
 import { useReveal } from "../components/portfolioHooks";
 
 const Home = () => {
@@ -26,7 +25,6 @@ const Home = () => {
       <Projects />
       <Experience />
       <Services />
-      <Testimonials />
       <ContactForm />
       <SiteFooter />
       <BackToTop />
