@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const links = ["About", "Skills", "Projects", "Experience", "Contact"];
@@ -20,6 +21,10 @@ const Navbar = () => {
 
   const scrollToSection = (id) => {
     setMenuOpen(false);
+    toast.success(`You clicked ${id.charAt(0).toUpperCase() + id.slice(1)}`, {
+      id: `nav-${id}`,
+      duration: 1500,
+    });
     if (location.pathname !== "/") {
       navigate("/");
       window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 80);
@@ -35,6 +40,10 @@ const Navbar = () => {
 
   const handleDashboardNav = (tab) => {
     setMenuOpen(false);
+    toast.success(`Opening ${tab === "projects" ? "Project View" : "Digital Marketing"}`, {
+      id: `dashboard-${tab}`,
+      duration: 1500,
+    });
     navigate(`/dashboard?tab=${tab}`);
   };
 
@@ -43,7 +52,16 @@ const Navbar = () => {
   return (
     <nav className={`navbar${scrolled || menuOpen ? " scrolled" : ""}`}>
       <div className="nav-inner">
-        <div className="logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Kavi Varman</div>
+        <div
+          className="logo"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            toast.success("You clicked Home", { id: "nav-home", duration: 1500 });
+            navigate("/");
+          }}
+        >
+          Kavi Varman
+        </div>
 
         <ul className="nav-links">
           {!isDashboard && links.map((link) => (

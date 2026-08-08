@@ -12,8 +12,8 @@ const Skills = () => {
             <div className={`skill-group reveal reveal-delay-${groupIndex + 1}`} key={group.label}>
               <div className="skill-group-label">{group.label}</div>
               <div className="skills-grid">
-                {group.items.map((skill) => (
-                  <div className="skill-chip" key={skill.name}>
+                {group.items.map((skill, skillIndex) => (
+                  <div className="skill-chip" style={{ "--skill-delay": `${skillIndex * 45}ms` }} key={skill.name}>
                     <div className="skill-icon">{skill.icon}</div>
                     <div className="skill-name">{skill.name}</div>
                   </div>

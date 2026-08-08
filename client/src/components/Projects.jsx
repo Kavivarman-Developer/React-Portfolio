@@ -1,4 +1,5 @@
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { PROJECTS } from "./portfolioData";
 
 const pillClass = { cyan: "pill-cyan", violet: "pill-violet", pink: "pill-pink", green: "pill-green" };
@@ -20,7 +21,8 @@ const Projects = () => {
 
         <div className="projects-slider reveal reveal-delay-3" aria-label="Scrollable project showcase">
           {PROJECTS.map((project) => (
-              <article className="project-card" key={project.num}>
+            <div className="project-card-shell" key={project.num}>
+              <article className="project-card">
                 {project.image && (
                   <div className="project-image">
                     <div className="browser-frame">
@@ -45,10 +47,10 @@ const Projects = () => {
                   </div>
                   <div className="project-actions">
                     {project.github !== "#" && (
-                      <a className="project-btn" href={project.github} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a>
+                      <a className="project-btn" href={project.github} target="_blank" rel="noreferrer" onClick={() => toast.success(`Opening ${project.title} GitHub`, { id: `github-${project.num}`, duration: 1600 })}><FaGithub /> GitHub</a>
                     )}
                     {project.demo !== "#" && (
-                      <a className="project-btn primary" href={project.demo} target="_blank" rel="noreferrer"><FaExternalLinkAlt /> Live Demo</a>
+                      <a className="project-btn primary" href={project.demo} target="_blank" rel="noreferrer" onClick={() => toast.success(`Opening ${project.title}`, { id: `demo-${project.num}`, duration: 1600 })}><FaExternalLinkAlt /> Live Demo</a>
                     )}
                     {project.github === "#" && project.demo === "#" && (
                       <span className="project-status">Case study in progress</span>
@@ -56,6 +58,7 @@ const Projects = () => {
                   </div>
                 </div>
               </article>
+            </div>
           ))}
         </div>
       </div>
