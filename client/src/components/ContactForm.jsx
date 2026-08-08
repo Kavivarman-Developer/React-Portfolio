@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaBriefcase, FaEnvelope, FaGithub, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
 
 const GITHUB_URL = "https://github.com/Kavivarman-Developer?tab=repositories";
 const LINKEDIN_URL = "https://www.linkedin.com/in/kavivarman-s-ba57382a2";
@@ -50,6 +51,9 @@ const ContactForm = () => {
               <a className="social-link" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" onClick={() => toast.success("Opening LinkedIn", { id: "social-linkedin", duration: 1500 })}><FaLinkedinIn /></a>
               <a className="social-link" href="#" aria-label="Portfolio" onClick={() => toast.success("You clicked Portfolio", { id: "social-portfolio", duration: 1500 })}><FaBriefcase /></a>
             </div>
+            <a className="contact-resume-link" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
+              Download Resume
+            </a>
           </div>
           <div className="reveal reveal-delay-2">
             <form onSubmit={handleSubmit}>

@@ -1,6 +1,9 @@
+import { FaDownload } from "react-icons/fa";
+import { RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
+
 const stats = [
   ["1+", "Years Experience"],
-  ["7+", "Projects Built"],
+  ["8+", "Projects Built"],
   ["MERN", "Primary Stack"],
   ["Remote", "Available"],
 ];
@@ -16,14 +19,17 @@ const Hero = () => {
             <div className="hero-badge reveal visible">kavi@dev ~ % whoami<span className="terminal-cursor" /></div>
             <h1 className="hero-title">
               <span className="line"><span className="word">Kavi</span></span>
-              <span className="line"><span className="word">Varman</span></span>
+              <span className="line"><span className="word">Varman</span> <span className="hero-title-s">S</span></span>
             </h1>
             <div className="hero-role reveal reveal-delay-1 visible">Full Stack Developer - MERN Stack</div>
             <p className="hero-sub reveal reveal-delay-1 visible">
-              I build React interfaces, Node.js APIs, and MongoDB-backed applications for dashboards, business websites, and service portals. With 1+ years of hands-on work and 7+ projects built, I am open to remote, freelance, and full-time roles.
+              I build React interfaces, Node.js APIs, and MongoDB-backed applications for dashboards, business websites, and service portals. With 1+ years of hands-on work and 8+ projects built, I am open to remote, freelance, and full-time roles.
             </p>
             <div className="hero-actions reveal reveal-delay-2 visible">
               <button className="btn-primary" type="button" onClick={() => scrollTo("projects")}>View Projects</button>
+              <a className="btn-resume" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
+                <FaDownload /> Download Resume
+              </a>
               <button className="btn-outline" type="button" onClick={() => scrollTo("contact")}>Let's Work Together</button>
             </div>
           </div>
@@ -38,12 +44,12 @@ const Hero = () => {
               </div>
               <pre className="code-body">
                 <code>
-{`const developer = {
+                  {`const developer = {
   name: 'Kavi Varman',
   role: 'Full Stack Developer',
   stack: ['React', 'Node.js', 'MongoDB', 'Express'],
   location: 'Tamil Nadu, IN',
-  projects: '7+ built',
+  projects: '8+ built',
   status: 'available for work'
 }`}
                 </code>

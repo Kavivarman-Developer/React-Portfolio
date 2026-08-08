@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { FaDownload } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RESUME_DOWNLOAD_NAME, RESUME_FILE } from "./resumeConfig";
 
 const links = ["About", "Skills", "Projects", "Experience", "Contact"];
 
@@ -59,7 +61,7 @@ const Navbar = () => {
             navigate("/");
           }}
         >
-          Kavi Varman
+          Kavi Varman <span className="logo-suffix">S</span>
         </div>
 
         <ul className="nav-links">
@@ -95,9 +97,16 @@ const Navbar = () => {
           )}
         </ul>
 
-        <button className="nav-cta" type="button" onClick={() => scrollToSection("contact")}>
-          <span>Available for Work</span>
-        </button>
+        <div className="nav-actions">
+          <button className="nav-cta" type="button" onClick={() => scrollToSection("contact")}>
+            <span>Available for Work</span>
+          </button>
+
+          <a className="nav-resume" href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME} aria-label="Download resume">
+            <FaDownload />
+            <span>Resume</span>
+          </a>
+        </div>
 
         <button
           className="mobile-menu-btn"
@@ -133,6 +142,9 @@ const Navbar = () => {
         <button type="button" onClick={() => scrollToSection("contact")}>
           Available for Work
         </button>
+        <a href={RESUME_FILE} download={RESUME_DOWNLOAD_NAME}>
+          Download Resume
+        </a>
       </div>
     </nav>
   );

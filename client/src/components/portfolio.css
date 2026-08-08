@@ -109,6 +109,25 @@
     background: linear-gradient(135deg, var(--cyan), var(--violet));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;
   }
+  .logo-suffix {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-left: 6px;
+    border: 1px solid rgba(14,165,160,0.26);
+    border-radius: 8px;
+    background: #0EA5A0;
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(14,165,160,0.22);
+    vertical-align: middle;
+  }
 
   .nav-links { display: flex; gap: 36px; list-style: none; }
   .nav-links a {
@@ -133,6 +152,11 @@
   }
   .nav-cta:hover::before { opacity: 1; }
   .nav-cta span { position: relative; z-index: 1; }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   .mobile-menu-btn {
     display: none;
     width: 42px;
@@ -183,6 +207,24 @@
 
   .hero-title .line { overflow: hidden; display: block; }
   .hero-title .word { display: inline-block; }
+  .hero-title-s {
+    display: inline-grid;
+    place-items: center;
+    width: clamp(46px, 6vw, 74px);
+    height: clamp(46px, 6vw, 74px);
+    margin-left: 12px;
+    border: 1px solid rgba(14,165,160,0.42);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0EA5A0, #2F6FED);
+    color: #fff;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: clamp(24px, 3.8vw, 42px);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+    box-shadow: 0 18px 38px rgba(14,165,160,0.24);
+    vertical-align: 0.1em;
+  }
   .gradient-text {
     background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 50%, var(--pink) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -544,7 +586,7 @@
   @media (max-width: 768px) {
     body.kavi-cursor-active { cursor: auto; }
     .cursor, .cursor-ring, .mouse-glow { display: none; }
-    .nav-links, .nav-cta { display: none; }
+    .nav-links, .nav-actions { display: none; }
     .nav-inner { padding: 0 20px; }
     .mobile-menu-btn { display: inline-flex; }
     .mobile-menu {
@@ -3282,5 +3324,85 @@
     .project-spotlight,
     .spotlight-progress span {
       animation: none;
+    }
+  }
+
+  /* Resume download actions */
+  .btn-resume {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 47px;
+    padding: 13px 24px;
+    border: 1px solid #0EA5A0;
+    border-radius: 12px;
+    background: #0EA5A0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 12px 28px rgba(14,165,160,0.24);
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .btn-resume:hover {
+    background: #0B8D89;
+    border-color: #0B8D89;
+    box-shadow: 0 16px 34px rgba(14,165,160,0.3);
+    transform: translateY(-2px);
+  }
+
+  .nav-resume {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 9px 12px;
+    border: 1px solid rgba(47,111,237,0.2);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink-text);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(11,15,20,0.08);
+    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+
+  .nav-resume:hover {
+    background: #F4F8FF;
+    border-color: rgba(47,111,237,0.38);
+    color: var(--accent-blue);
+    transform: translateY(-1px);
+  }
+
+  .contact-resume-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    margin-top: 18px;
+    padding: 10px 14px;
+    border: 1px solid rgba(14,165,160,0.32);
+    border-radius: 8px;
+    background: rgba(14,165,160,0.1);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+
+  .contact-resume-link:hover {
+    background: rgba(14,165,160,0.18);
+    border-color: rgba(14,165,160,0.56);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 768px) {
+    .btn-resume {
+      width: 100%;
     }
   }
